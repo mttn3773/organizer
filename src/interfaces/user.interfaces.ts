@@ -6,3 +6,8 @@ export interface IUser extends Document {
   created_at: Date;
   updated_at: Date;
 }
+
+export interface ICreateUser {
+  email: string;
+  password: string;
+}

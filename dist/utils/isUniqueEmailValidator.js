@@ -12,29 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.register = exports.getAllUsers = void 0;
+exports.isUniqueEmail = void 0;
 const user_model_1 = __importDefault(require("../models/user.model"));
-const argon2_1 = require("argon2");
-const getAllUsers = (_req, res, _next) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield user_model_1.default.find();
-    return res.json({ users }).end();
-});
-exports.getAllUsers = getAllUsers;
-const register = (req, res, _next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { email, password } = req.body;
-        const hashedPassword = yield argon2_1.hash(password);
-        const user = new user_model_1.default({ email, password: hashedPassword });
-        yield user.save();
-        return res.json({ msg: "User created" }).end();
-    }
-    catch (error) {
-        return res
-            .json({
-            errors: [{ msg: error.message || "Something went wrong" }],
-        })
-            .end();
+const isUniqueEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.default.findOne({ email });
+    if (user) {
+        return Promise.reject("Email already in use");
     }
 });
-exports.register = register;
-//# sourceMappingURL=user.controller.js.map
+exports.isUniqueEmail = isUniqueEmail;
+//# sourceMappingURL=isUniqueEmailValidator.js.map
