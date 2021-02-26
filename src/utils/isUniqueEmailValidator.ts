@@ -5,4 +5,5 @@ export const isUniqueEmail: CustomValidator = async (email: string) => {
   if (user) {
     return Promise.reject("Email already in use");
   }
+  return Promise.resolve();
 };

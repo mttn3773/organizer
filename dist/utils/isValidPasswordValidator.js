@@ -8,18 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isUniqueEmail = void 0;
-const user_model_1 = __importDefault(require("../models/user.model"));
-const isUniqueEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield user_model_1.default.findOne({ email });
-    if (user) {
-        return Promise.reject("Email already in use");
+exports.isValidPassword = void 0;
+const argon2_1 = require("argon2");
+const isValidPassword = (password, { req }) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.user;
+    if (!user) {
+        return Promise.reject("Couldnt find a user");
+    }
+    const isValid = yield argon2_1.verify(user.password, password);
+    if (!isValid) {
+        return Promise.reject("Wrong Password");
     }
     return Promise.resolve();
 });
-exports.isUniqueEmail = isUniqueEmail;
-//# sourceMappingURL=isUniqueEmailValidator.js.map
+exports.isValidPassword = isValidPassword;
+//# sourceMappingURL=isValidPasswordValidator.js.map

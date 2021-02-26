@@ -5,7 +5,7 @@ config({ path: "./.env" });
 const PORT = process.env.PORT || 4000;
 const MONGO_URI = process.env.MONGO_URI;
 
-const mongoConfig = {
+export const mongoConfig = {
   uri: MONGO_URI,
   settings: {
     useNewUrlParser: true,
@@ -14,7 +14,11 @@ const mongoConfig = {
   },
 };
 
+export const jwtConfig = {
+  accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
+  refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
+};
+
 export const server = {
   port: PORT,
-  mongo: mongoConfig,
 };

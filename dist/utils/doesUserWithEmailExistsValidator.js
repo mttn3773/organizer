@@ -12,14 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isUniqueEmail = void 0;
+exports.doesUserWithEmailExists = void 0;
 const user_model_1 = __importDefault(require("../models/user.model"));
-const isUniqueEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
+const doesUserWithEmailExists = (email, { req }) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_model_1.default.findOne({ email });
-    if (user) {
-        return Promise.reject("Email already in use");
+    if (!user) {
+        return Promise.reject("Couldnt find a user");
     }
+    req.user = user;
     return Promise.resolve();
 });
-exports.isUniqueEmail = isUniqueEmail;
-//# sourceMappingURL=isUniqueEmailValidator.js.map
+exports.doesUserWithEmailExists = doesUserWithEmailExists;
+//# sourceMappingURL=doesUserWithEmailExistsValidator.js.map
