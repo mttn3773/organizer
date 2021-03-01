@@ -1,9 +1,10 @@
+import { ITokenPaylaod } from "./interfaces/tokenPayload.interface";
 import { IUser } from "./interfaces/user.interfaces";
 
 declare global {
   namespace Express {
     interface Request {
-      user: IUser;
+      user: ITokenPaylaod["user"];
     }
   }
 }

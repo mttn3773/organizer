@@ -1,19 +1,15 @@
-import { ITokenPaylaod } from "./../interfaces/tokenPayload.interface";
-import { signAccessToken, signRefreshToken } from "./../utils/signJwt";
 import { hash } from "argon2";
 import { NextFunction, Request, Response } from "express";
 import User from "../models/user.model";
 import { IError } from "./../interfaces/error.interface";
 import { ICreateUser, IUser } from "./../interfaces/user.interfaces";
-import { verify } from "jsonwebtoken";
-import { jwtConfig } from "../config/config";
+import { signAccessToken, signRefreshToken } from "./../utils/signJwt";
 export const getAllUsers = async (
   _req: Request,
   res: Response,
   _next: NextFunction
 ) => {
   const users = await User.find();
-
   return res.json({ users }).end();
 };
 
@@ -27,6 +23,16 @@ export const register = async (
     const hashedPassword = await hash(password);
     const user = new User({ email, password: hashedPassword } as IUser);
     await user.save();
+    const refreshToken = signRefreshToken(user);
+    const accessToken = signAccessToken(user);
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
+    });
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      maxAge: 10 * 60 * 1000, // 10m
+    });
     return res.json({ msg: "User created" }).end();
   } catch (error) {
     return res
@@ -44,12 +50,16 @@ export const login = async (
   _next: NextFunction
 ) => {
   try {
-    const refreshToken = signRefreshToken(user!);
-    const accessToken = signAccessToken(user!);
+    const refreshToken = signRefreshToken(user);
+    const accessToken = signAccessToken(user);
+
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      path: "/api/user/token",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
+    });
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      maxAge: 10 * 60 * 1000, // 10m
     });
     return res.json({ refreshToken, accessToken }).end();
   } catch (error) {
@@ -62,21 +72,29 @@ export const login = async (
   }
 };
 
-export const refreshToken = async (
-  req: Request,
+export const logout = async (
+  _req: Request,
   res: Response,
   _next: NextFunction
 ) => {
   try {
-    const token = req.cookies["refreshToken"];
-    if (!refreshToken) {
-      return res.sendStatus(400);
-    }
-    verify(token, jwtConfig.refreshTokenSecret!, (err: any, paylaod: any) => {
-      if (err) return res.sendStatus(400);
-      const accessToken = signAccessToken((paylaod as ITokenPaylaod).user);
-      return res.json({ accessToken }).end();
-    });
+    res.cookie(
+      "refreshToken",
+      {},
+      {
+        httpOnly: true,
+        maxAge: -1,
+      }
+    );
+    res.cookie(
+      "accessToken",
+      {},
+      {
+        httpOnly: true,
+        maxAge: -1,
+      }
+    );
+    return res.json({ msg: "Logged out" }).end();
   } catch (error) {
     return res
       .json({

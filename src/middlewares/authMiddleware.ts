@@ -1,27 +1,67 @@
-import { ITokenPaylaod } from "./../interfaces/tokenPayload.interface";
 import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
-import { jwtConfig } from "../config/config";
 import { IError } from "src/interfaces/error.interface";
+import User from "../models/user.model";
+import { jwtConfig } from "./../config/config";
+import { ITokenPaylaod } from "./../interfaces/tokenPayload.interface";
+import { signAccessToken } from "./../utils/signJwt";
 export const authMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader?.split(" ")[1];
-    console.log(token);
-    if (!token) {
-      return res.sendStatus(401);
-    }
-    verify(token, jwtConfig.accessTokenSecret!, (err, paylaod) => {
-      if (err) {
-        return res.sendStatus(403);
+    const accessToken = req.cookies["accessToken"];
+    const refreshToken = req.cookies["refreshToken"];
+    if (accessToken) {
+      const payload = verify(
+        accessToken,
+        jwtConfig.accessTokenSecret!
+      ) as ITokenPaylaod;
+      if (!payload) {
+        return res
+          .status(401)
+          .json({ errors: [{ msg: "Please sign in or register" }] as IError[] })
+          .end();
       }
-      req.user = (paylaod as ITokenPaylaod).user;
+      req.user = payload.user;
       return next();
-    });
+    }
+    if (refreshToken) {
+      const payload = verify(
+        refreshToken,
+        jwtConfig.refreshTokenSecret!
+      ) as ITokenPaylaod;
+      if (!payload) {
+        return res
+          .status(401)
+          .json({ errors: [{ msg: "Please sign in or register" }] as IError[] })
+          .end();
+      }
+      const user = await User.findById(payload.user._id);
+      if (!user) {
+        return res
+          .status(401)
+          .json({ errors: [{ msg: "Please sign in or register" }] as IError[] })
+          .end();
+      }
+      if (payload.user.count !== user.count) {
+        return res
+          .status(401)
+          .json({ errors: [{ msg: "Please sign in or register" }] as IError[] })
+          .end();
+      }
+      const newAccessToken = signAccessToken(user);
+      res.cookie("accessToken", newAccessToken, {
+        httpOnly: true,
+        maxAge: 10 * 60 * 1000, // 10m
+      });
+      return next();
+    }
+    return res
+      .status(401)
+      .json({ errors: [{ msg: "Please sign in or register" }] as IError[] })
+      .end();
   } catch (error) {
     return res
       .json({

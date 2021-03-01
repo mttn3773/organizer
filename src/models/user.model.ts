@@ -9,6 +9,10 @@ const UserSchema = new Schema(
       unique: true,
       lowercase: true,
     },
+    count: {
+      type: Number,
+      default: 0,
+    },
     password: { type: String, required: true },
   },
   { timestamps: true }

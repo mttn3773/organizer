@@ -8,25 +8,62 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authMiddleware = void 0;
 const jsonwebtoken_1 = require("jsonwebtoken");
-const config_1 = require("../config/config");
+const user_model_1 = __importDefault(require("../models/user.model"));
+const config_1 = require("./../config/config");
+const signJwt_1 = require("./../utils/signJwt");
 const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const authHeader = req.headers["authorization"];
-        const token = authHeader && (authHeader === null || authHeader === void 0 ? void 0 : authHeader.split(" ")[1]);
-        console.log(token);
-        if (!token) {
-            return res.sendStatus(401);
-        }
-        jsonwebtoken_1.verify(token, config_1.jwtConfig.accessTokenSecret, (err, paylaod) => {
-            if (err) {
-                return res.sendStatus(403);
+        const accessToken = req.cookies["accessToken"];
+        const refreshToken = req.cookies["refreshToken"];
+        if (accessToken) {
+            const payload = jsonwebtoken_1.verify(accessToken, config_1.jwtConfig.accessTokenSecret);
+            if (!payload) {
+                return res
+                    .status(401)
+                    .json({ errors: [{ msg: "Please sign in or register" }] })
+                    .end();
             }
-            req.user = paylaod.user;
+            req.user = payload.user;
             return next();
-        });
+        }
+        if (refreshToken) {
+            const payload = jsonwebtoken_1.verify(refreshToken, config_1.jwtConfig.refreshTokenSecret);
+            if (!payload) {
+                return res
+                    .status(401)
+                    .json({ errors: [{ msg: "Please sign in or register" }] })
+                    .end();
+            }
+            const user = yield user_model_1.default.findById(payload.user._id);
+            if (!user) {
+                return res
+                    .status(401)
+                    .json({ errors: [{ msg: "Please sign in or register" }] })
+                    .end();
+            }
+            if (payload.user.count !== user.count) {
+                return res
+                    .status(401)
+                    .json({ errors: [{ msg: "Please sign in or register" }] })
+                    .end();
+            }
+            const newAccessToken = signJwt_1.signAccessToken(user);
+            res.cookie("accessToken", newAccessToken, {
+                httpOnly: true,
+                maxAge: 10 * 60 * 1000,
+            });
+            return next();
+        }
+        return res
+            .status(401)
+            .json({ errors: [{ msg: "Please sign in or register" }] })
+            .end();
     }
     catch (error) {
         return res

@@ -8,6 +8,10 @@ const UserSchema = new mongoose_1.Schema({
         unique: true,
         lowercase: true,
     },
+    count: {
+        type: Number,
+        default: 0,
+    },
     password: { type: String, required: true },
 }, { timestamps: true });
 exports.default = mongoose_1.model("User", UserSchema);

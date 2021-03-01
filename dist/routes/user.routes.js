@@ -19,6 +19,6 @@ router.post("/login", [
     express_validator_1.check("email").isEmail().custom(doesUserWithEmailExistsValidator_1.doesUserWithEmailExists),
     express_validator_1.check("password").isLength({ min: 6 }).custom(isValidPasswordValidator_1.isValidPassword),
 ], mapValidationErrors_1.mapValidationErrors, user_controller_1.login);
-router.get("/token", user_controller_1.refreshToken);
+router.post("/logout", authMiddleware_1.authMiddleware, user_controller_1.logout);
 exports.default = router;
 //# sourceMappingURL=user.routes.js.map

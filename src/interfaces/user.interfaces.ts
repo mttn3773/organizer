@@ -5,6 +5,7 @@ export interface IUser extends Document {
   password?: string;
   created_at: Date;
   updated_at: Date;
+  count: number;
 }
 
 export interface ICreateUser {

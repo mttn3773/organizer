@@ -12,12 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.refreshToken = exports.login = exports.register = exports.getAllUsers = void 0;
-const signJwt_1 = require("./../utils/signJwt");
+exports.logout = exports.login = exports.register = exports.getAllUsers = void 0;
 const argon2_1 = require("argon2");
 const user_model_1 = __importDefault(require("../models/user.model"));
-const jsonwebtoken_1 = require("jsonwebtoken");
-const config_1 = require("../config/config");
+const signJwt_1 = require("./../utils/signJwt");
 const getAllUsers = (_req, res, _next) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield user_model_1.default.find();
     return res.json({ users }).end();
@@ -29,6 +27,16 @@ const register = (req, res, _next) => __awaiter(void 0, void 0, void 0, function
         const hashedPassword = yield argon2_1.hash(password);
         const user = new user_model_1.default({ email, password: hashedPassword });
         yield user.save();
+        const refreshToken = signJwt_1.signRefreshToken(user);
+        const accessToken = signJwt_1.signAccessToken(user);
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+        res.cookie("accessToken", accessToken, {
+            httpOnly: true,
+            maxAge: 10 * 60 * 1000,
+        });
         return res.json({ msg: "User created" }).end();
     }
     catch (error) {
@@ -47,8 +55,11 @@ const login = ({ user }, res, _next) => __awaiter(void 0, void 0, void 0, functi
         const accessToken = signJwt_1.signAccessToken(user);
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
-            path: "/api/user/token",
             maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+        res.cookie("accessToken", accessToken, {
+            httpOnly: true,
+            maxAge: 10 * 60 * 1000,
         });
         return res.json({ refreshToken, accessToken }).end();
     }
@@ -62,18 +73,17 @@ const login = ({ user }, res, _next) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.login = login;
-const refreshToken = (req, res, _next) => __awaiter(void 0, void 0, void 0, function* () {
+const logout = (_req, res, _next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const token = req.cookies["refreshToken"];
-        if (!exports.refreshToken) {
-            return res.sendStatus(400);
-        }
-        jsonwebtoken_1.verify(token, config_1.jwtConfig.refreshTokenSecret, (err, paylaod) => {
-            if (err)
-                return res.sendStatus(400);
-            const accessToken = signJwt_1.signAccessToken(paylaod.user);
-            return res.json({ accessToken }).end();
+        res.cookie("refreshToken", {}, {
+            httpOnly: true,
+            maxAge: -1,
         });
+        res.cookie("accessToken", {}, {
+            httpOnly: true,
+            maxAge: -1,
+        });
+        return res.json({ msg: "Logged out" }).end();
     }
     catch (error) {
         return res
@@ -84,5 +94,5 @@ const refreshToken = (req, res, _next) => __awaiter(void 0, void 0, void 0, func
             .end();
     }
 });
-exports.refreshToken = refreshToken;
+exports.logout = logout;
 //# sourceMappingURL=user.controller.js.map
