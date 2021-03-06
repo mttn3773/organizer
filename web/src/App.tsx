@@ -1,22 +1,16 @@
-import React, { useEffect, useState } from "react";
-import moment from "moment";
-import { Button } from "@chakra-ui/react";
-import { Selector } from "./components/Selector";
-import { Calendar } from "./components/Calendar";
-import { useTasks } from "./hooks/useTasks";
+import axios from "axios";
+import React, { useContext, useEffect } from "react";
+import { Notify } from "./components/notify/Notify";
+import { Routes } from "./pages/routes";
+import { GlobalState } from "./store/globalStore";
+import { DataProvider } from "./store/globalStore";
 function App() {
-  const [date, setDate] = useState<moment.Moment>(moment());
-  const { tasks, addTask } = useTasks();
   return (
     <div className="App">
-      {/* <Button
-        onClick={() => {
-          addTask({ title: "Test", date: moment().toString() });
-        }}
-      ></Button> */}
-      {JSON.stringify(tasks)}
-      <Selector date={date} setDate={setDate} />
-      <Calendar date={date} />
+      <DataProvider>
+        <Notify />
+        <Routes />
+      </DataProvider>
     </div>
   );
 }

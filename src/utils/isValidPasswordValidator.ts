@@ -7,7 +7,7 @@ export const isValidPassword: CustomValidator = async (
 ) => {
   const user = (req as Request).user;
   if (!user) {
-    return Promise.reject("Couldnt find a user");
+    return Promise.reject();
   }
   const isValid = await verify(user.password!, password);
   if (!isValid) {

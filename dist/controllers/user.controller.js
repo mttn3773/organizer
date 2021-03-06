@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logout = exports.login = exports.register = exports.getAllUsers = void 0;
+exports.logout = exports.login = exports.register = exports.me = exports.getAllUsers = void 0;
 const argon2_1 = require("argon2");
 const user_model_1 = __importDefault(require("../models/user.model"));
 const signJwt_1 = require("./../utils/signJwt");
@@ -21,6 +21,10 @@ const getAllUsers = (_req, res, _next) => __awaiter(void 0, void 0, void 0, func
     return res.json({ users }).end();
 });
 exports.getAllUsers = getAllUsers;
+const me = (req, res, _next) => __awaiter(void 0, void 0, void 0, function* () {
+    return res.json({ user: req.user });
+});
+exports.me = me;
 const register = (req, res, _next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;

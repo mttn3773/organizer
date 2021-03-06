@@ -13,6 +13,10 @@ export const getAllUsers = async (
   return res.json({ users }).end();
 };
 
+export const me = async (req: Request, res: Response, _next: NextFunction) => {
+  return res.json({ user: req.user });
+};
+
 export const register = async (
   req: Request,
   res: Response,

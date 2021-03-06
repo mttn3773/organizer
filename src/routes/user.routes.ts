@@ -3,7 +3,7 @@ import { isValidPassword } from "./../utils/isValidPasswordValidator";
 import { doesUserWithEmailExists } from "./../utils/doesUserWithEmailExistsValidator";
 import { mapValidationErrors } from "./../utils/mapValidationErrors";
 import { isUniqueEmail } from "./../utils/isUniqueEmailValidator";
-import { login, logout, register } from "./../controllers/user.controller";
+import { login, logout, me, register } from "./../controllers/user.controller";
 import { Router } from "express";
 import { getAllUsers } from "../controllers/user.controller";
 import { check } from "express-validator";
@@ -31,4 +31,5 @@ router.post(
   login
 );
 router.post("/logout", authMiddleware, logout);
+router.get("/me", authMiddleware, me);
 export default router;

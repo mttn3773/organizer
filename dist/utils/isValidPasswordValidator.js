@@ -14,7 +14,7 @@ const argon2_1 = require("argon2");
 const isValidPassword = (password, { req }) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
     if (!user) {
-        return Promise.reject("Couldnt find a user");
+        return Promise.reject();
     }
     const isValid = yield argon2_1.verify(user.password, password);
     if (!isValid) {
