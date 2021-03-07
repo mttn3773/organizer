@@ -5,9 +5,15 @@ import { Day } from "./Day";
 
 interface CalendarProps {
   date: moment.Moment;
+  selected: moment.Moment;
+  setSelected: React.Dispatch<React.SetStateAction<moment.Moment>>;
 }
 
-export const Calendar: React.FC<CalendarProps> = ({ date }) => {
+export const Calendar: React.FC<CalendarProps> = ({
+  date,
+  setSelected,
+  selected,
+}) => {
   const startDay = date.clone().startOf("month").startOf("week");
   const endDay = date.clone().endOf("month").endOf("week");
   const days: moment.Moment[] = [];
@@ -19,6 +25,11 @@ export const Calendar: React.FC<CalendarProps> = ({ date }) => {
   const checkIsActive = (day: moment.Moment) => {
     return !!(
       moment().format("DD MMM YYYY") === day.clone().format("DD MMM YYYY")
+    );
+  };
+  const checkIsSelected = (day: moment.Moment) => {
+    return !!(
+      selected.format("DD MMM YYYY") === day.clone().format("DD MMM YYYY")
     );
   };
   const checkIsThisMonth = (day: moment.Moment) => {
@@ -62,6 +73,8 @@ export const Calendar: React.FC<CalendarProps> = ({ date }) => {
       {days.map((day) => {
         return (
           <Day
+            isSelected={checkIsSelected(day)}
+            setSelected={setSelected}
             day={day}
             key={day.clone().toString()}
             isActive={checkIsActive(day)}

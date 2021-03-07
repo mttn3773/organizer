@@ -4,6 +4,7 @@ import { server, mongoConfig } from "./config/config";
 import { connect } from "mongoose";
 import userRouter from "./routes/user.routes";
 import cookieParser from "cookie-parser";
+import taskRouter from "./routes/task.routes";
 import { json, urlencoded } from "body-parser";
 (() => {
   try {
@@ -16,6 +17,7 @@ import { json, urlencoded } from "body-parser";
     app.use(cookieParser());
     app.use(urlencoded({ extended: false }));
     app.use("/api/user", userRouter);
+    app.use("/api/task", taskRouter);
     app.listen(server.port, () => {
       console.log(`App is running on port ${server.port}`);
     });

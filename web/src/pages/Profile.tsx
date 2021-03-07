@@ -12,6 +12,7 @@ interface ProfileProps {}
 
 export const ProfilePage: React.FC<ProfileProps> = ({}) => {
   const [date, setDate] = useState<moment.Moment>(moment());
+  const [selected, setSelected] = useState<moment.Moment>(moment());
   const { request } = useHttp();
   const handleClick = async () => {
     const res = await request({ url: config.server.endpoints.me });
@@ -19,9 +20,10 @@ export const ProfilePage: React.FC<ProfileProps> = ({}) => {
   };
   return (
     <Flex direction="column">
+      {JSON.stringify(moment().toDate())}
       <button onClick={handleClick}> + </button>
       <Selector date={date} setDate={setDate} />
-      <Calendar date={date} />
+      <Calendar date={date} setSelected={setSelected} selected={selected} />
     </Flex>
   );
 };

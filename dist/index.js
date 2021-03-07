@@ -9,6 +9,7 @@ const config_1 = require("./config/config");
 const mongoose_1 = require("mongoose");
 const user_routes_1 = __importDefault(require("./routes/user.routes"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const task_routes_1 = __importDefault(require("./routes/task.routes"));
 const body_parser_1 = require("body-parser");
 (() => {
     try {
@@ -21,6 +22,7 @@ const body_parser_1 = require("body-parser");
         app.use(cookie_parser_1.default());
         app.use(body_parser_1.urlencoded({ extended: false }));
         app.use("/api/user", user_routes_1.default);
+        app.use("/api/task", task_routes_1.default);
         app.listen(config_1.server.port, () => {
             console.log(`App is running on port ${config_1.server.port}`);
         });
