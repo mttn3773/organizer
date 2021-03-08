@@ -18,7 +18,7 @@ export const authMiddleware = async (
         accessToken,
         jwtConfig.accessTokenSecret!
       ) as ITokenPaylaod;
-      if (!payload) {
+      if (!payload.user) {
         return res
           .status(401)
           .json({ errors: [{ msg: "Please sign in or register" }] as IError[] })
@@ -56,6 +56,7 @@ export const authMiddleware = async (
         httpOnly: true,
         maxAge: 10 * 60 * 1000, // 10m
       });
+      req.user = user as any;
       return next();
     }
     return res

@@ -1,6 +1,7 @@
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import moment from "moment";
 import React from "react";
+import { ITask } from "../../interfaces/tasks.interface";
 
 interface DayProps {
   day: moment.Moment;
@@ -8,6 +9,7 @@ interface DayProps {
   isThisMonth: boolean;
   isSelected: boolean;
   setSelected: React.Dispatch<React.SetStateAction<moment.Moment>>;
+  tasks: ITask[];
 }
 
 export const Day: React.FC<DayProps> = ({
@@ -16,6 +18,7 @@ export const Day: React.FC<DayProps> = ({
   isThisMonth,
   isSelected,
   setSelected,
+  tasks,
 }) => {
   return (
     <Flex
@@ -29,9 +32,26 @@ export const Day: React.FC<DayProps> = ({
       borderColor="green.500"
       borderRadius="12px"
       overflow="hidden"
+      position="relative"
       direction="column"
       cursor={isThisMonth ? "pointer" : "auto"}
     >
+      {!!tasks.length && (
+        <Flex
+          position="absolute"
+          borderRadius="50%"
+          top="4px"
+          right="4px"
+          bgColor="yellow.200"
+          w="1rem"
+          h="1rem"
+          justifyContent="center"
+          fontWeight="600"
+          alignItems="center"
+        >
+          {tasks.length}
+        </Flex>
+      )}
       <Text
         color="blackAlpha.800"
         fontWeight={isActive ? 800 : 500}

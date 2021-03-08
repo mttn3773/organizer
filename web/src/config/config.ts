@@ -3,6 +3,7 @@ const ENDPOINTS = {
   login: "/api/user/login",
   logout: "/api/user/logout",
   me: "/api/user/me",
+  tasks: "api/task",
 };
 
 export const config = {

@@ -1,7 +1,7 @@
 import React, { InputHTMLAttributes } from "react";
 import { ErrorMessage, useField } from "formik";
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
-import { toCapitalize } from "../utils/toCapitalize";
+import { toCapitalize } from "../../utils/toCapitalize";
 type InputFieldProps = InputHTMLAttributes<
   HTMLInputElement | HTMLTextAreaElement
 > & {

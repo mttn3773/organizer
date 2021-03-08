@@ -23,7 +23,7 @@ const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         const refreshToken = req.cookies["refreshToken"];
         if (accessToken) {
             const payload = jsonwebtoken_1.verify(accessToken, config_1.jwtConfig.accessTokenSecret);
-            if (!payload) {
+            if (!payload.user) {
                 return res
                     .status(401)
                     .json({ errors: [{ msg: "Please sign in or register" }] })
@@ -58,6 +58,7 @@ const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
                 httpOnly: true,
                 maxAge: 10 * 60 * 1000,
             });
+            req.user = user;
             return next();
         }
         return res

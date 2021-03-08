@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createTask = exports.getUserTasks = void 0;
 const tasks_model_1 = __importDefault(require("../models/tasks.model"));
 const getUserTasks = (req, res, _next) => __awaiter(void 0, void 0, void 0, function* () {
-    const tasks = yield tasks_model_1.default.find({ owner: req.user._id });
+    const tasks = yield tasks_model_1.default.find({ owner: req.user._id }).sort({ date: "asc" });
     return res.json({ tasks }).end();
 });
 exports.getUserTasks = getUserTasks;

@@ -8,7 +8,7 @@ export const getUserTasks = async (
   res: Response,
   _next: NextFunction
 ) => {
-  const tasks = await Task.find({ owner: req.user._id });
+  const tasks = await Task.find({ owner: req.user._id }).sort({ date: "asc" });
   return res.json({ tasks }).end();
 };
 export const createTask = async (

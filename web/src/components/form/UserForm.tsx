@@ -3,9 +3,9 @@ import axios from "axios";
 import { Form, Formik } from "formik";
 import React, { useContext, useEffect, useState } from "react";
 import { Redirect } from "react-router-dom";
-import { useHttp } from "../hooks/useHttp";
-import { GlobalState } from "../store/globalStore";
-import { toErrorMap } from "../utils/toErrorsMap";
+import { useHttp } from "../../hooks/useHttp";
+import { GlobalState } from "../../store/globalStore";
+import { toErrorMap } from "../../utils/toErrorsMap";
 import { InputField } from "./InputField";
 interface UserFormProps {
   url: string;

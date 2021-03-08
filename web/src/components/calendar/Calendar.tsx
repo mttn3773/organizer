@@ -1,39 +1,42 @@
 import { Box, Flex, Grid, Text } from "@chakra-ui/react";
 import moment from "moment";
 import React from "react";
+import { ITask } from "../../interfaces/tasks.interface";
 import { Day } from "./Day";
+const DAYS_OF_WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 interface CalendarProps {
   date: moment.Moment;
   selected: moment.Moment;
   setSelected: React.Dispatch<React.SetStateAction<moment.Moment>>;
+  tasks: ITask[];
 }
 
 export const Calendar: React.FC<CalendarProps> = ({
   date,
+  tasks,
   setSelected,
   selected,
 }) => {
   const startDay = date.clone().startOf("month").startOf("week");
   const endDay = date.clone().endOf("month").endOf("week");
   const days: moment.Moment[] = [];
-  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const indexDay = startDay.clone();
   while (indexDay.isBefore(endDay)) {
     days.push(indexDay.add(1, "day").clone());
   }
   const checkIsActive = (day: moment.Moment) => {
-    return !!(
-      moment().format("DD MMM YYYY") === day.clone().format("DD MMM YYYY")
-    );
+    return moment().isSame(day, "D");
   };
   const checkIsSelected = (day: moment.Moment) => {
-    return !!(
-      selected.format("DD MMM YYYY") === day.clone().format("DD MMM YYYY")
-    );
+    return selected.isSame(day, "D");
   };
   const checkIsThisMonth = (day: moment.Moment) => {
-    return !!(date.format("MMM") === day.clone().format("MMM"));
+    return date.isSame(day, "M");
+  };
+
+  const checkIsThisDay = (day: moment.Moment) => {
+    return tasks.filter((task) => moment(task.date).isSame(day, "D"));
   };
   return (
     <Grid
@@ -44,7 +47,7 @@ export const Calendar: React.FC<CalendarProps> = ({
       columnGap="2rem"
       mt="3rem"
     >
-      {daysOfWeek.map((day, index) => {
+      {DAYS_OF_WEEK.map((day, index) => {
         return (
           <Flex
             h="4rem"
@@ -73,6 +76,7 @@ export const Calendar: React.FC<CalendarProps> = ({
       {days.map((day) => {
         return (
           <Day
+            tasks={checkIsThisDay(day)}
             isSelected={checkIsSelected(day)}
             setSelected={setSelected}
             day={day}
