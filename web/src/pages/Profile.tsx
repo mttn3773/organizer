@@ -1,7 +1,6 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Grid, useMediaQuery } from "@chakra-ui/react";
 import moment from "moment";
-import React, { useContext, useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar } from "../components/calendar/Calendar";
 import { DayDetails } from "../components/calendar/DayDetails";
 import { Selector } from "../components/calendar/Selector";
@@ -15,6 +14,7 @@ export const ProfilePage: React.FC<ProfileProps> = ({}) => {
   const [date, setDate] = useState<moment.Moment>(moment());
   const [selected, setSelected] = useState<moment.Moment>(moment());
   const [tasks, setTasks] = useState<ITask[]>();
+  const [isMobile] = useMediaQuery("(max-width:1000px)");
   const { request } = useHttp();
   const handleLogout = () => {
     request({ url: config.server.endpoints.logout, method: "POST" }).then(
@@ -29,8 +29,14 @@ export const ProfilePage: React.FC<ProfileProps> = ({}) => {
     }).then((res) => setTasks(res.tasks));
   }, []);
   return (
-    <Flex direction="column">
-      <button onClick={handleLogout}> LOGOUT </button>
+    <Grid
+      gridAutoColumns="2fr 1fr 1fr"
+      templateAreas={{
+        sm: '"selector selector selector" "calendar calendar details"',
+        base:
+          '"selector selector selector" "calendar calendar calendar" "details details details"',
+      }}
+    >
       <Selector
         numberOfTasks={
           tasks
@@ -42,28 +48,30 @@ export const ProfilePage: React.FC<ProfileProps> = ({}) => {
         date={date}
         setDate={setDate}
       />
-      <Flex>
-        <Box w="80%">
-          <Calendar
-            date={date}
-            setSelected={setSelected}
-            selected={selected}
-            tasks={tasks ? tasks : []}
-          />
-        </Box>
-        <Box w="20%">
-          <DayDetails
-            date={selected}
-            tasks={
-              tasks
-                ? tasks.filter((task) =>
-                    moment(task.date).isSame(selected, "D")
-                  )
-                : []
-            }
-          />
-        </Box>
-      </Flex>
-    </Flex>
+
+      <Box gridArea="calendar">
+        <Calendar
+          date={date}
+          setSelected={setSelected}
+          selected={selected}
+          tasks={tasks ? tasks : []}
+        />
+      </Box>
+      <Box
+        pl="1rem"
+        borderLeft="1px solid"
+        borderColor="gray.200"
+        gridArea="details"
+      >
+        <DayDetails
+          date={selected}
+          tasks={
+            tasks
+              ? tasks.filter((task) => moment(task.date).isSame(selected, "D"))
+              : []
+          }
+        />
+      </Box>
+    </Grid>
   );
 };

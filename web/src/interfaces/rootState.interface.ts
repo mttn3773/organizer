@@ -3,5 +3,5 @@ import { IUser } from "./user.interface";
 export interface IRootState {
   errors: IError[];
   loading: boolean;
-  auth?: IUser;
+  auth?: boolean;
 }

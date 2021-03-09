@@ -1,7 +1,8 @@
+import { NextFunction, Request, Response } from "express";
 import { ICreateTask } from "../interfaces/tasks.interface";
-import { Request, Response, NextFunction } from "express";
 import Task from "../models/tasks.model";
-import { IError } from "src/interfaces/error.interface";
+import { sendErrors } from "./../utils/sendError";
+import { sendOnSuccess } from "./../utils/sendOnSuccess";
 
 export const getUserTasks = async (
   req: Request,
@@ -9,7 +10,7 @@ export const getUserTasks = async (
   _next: NextFunction
 ) => {
   const tasks = await Task.find({ owner: req.user._id }).sort({ date: "asc" });
-  return res.json({ tasks }).end();
+  return sendOnSuccess({ res }, { tasks });
 };
 export const createTask = async (
   req: Request,
@@ -25,13 +26,8 @@ export const createTask = async (
       description,
     } as ICreateTask);
     await task.save();
-    return res.json({ msg: "Task created", task }).end();
+    return sendOnSuccess({ res, msg: "Task created" }, { task });
   } catch (error) {
-    return res
-      .json({
-        errors: [{ msg: error.message || "Something went wrong" }] as IError[],
-      })
-      .status(500)
-      .end();
+    return sendErrors(res, 500, [{ msg: "Something went wrong" }]);
   }
 };

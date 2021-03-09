@@ -23,12 +23,12 @@ export const Day: React.FC<DayProps> = ({
   return (
     <Flex
       onClick={isThisMonth ? () => setSelected(day) : () => {}}
-      h="4rem"
-      w="75%"
+      h={{ sm: "4rem", base: "3rem" }}
+      w={{ sm: "75%", base: "100%" }}
       alignItems="center"
       justifyContent="space-around"
       bgColor={isThisMonth ? "blue.200" : "gray.300"}
-      border={isSelected ? "2px" : "none"}
+      border={isSelected && isThisMonth ? "2px" : "none"}
       borderColor="green.500"
       borderRadius="12px"
       overflow="hidden"

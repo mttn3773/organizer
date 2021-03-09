@@ -13,8 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.logout = exports.login = exports.register = exports.me = exports.getAllUsers = void 0;
+const sendOnSuccess_1 = require("./../utils/sendOnSuccess");
 const argon2_1 = require("argon2");
 const user_model_1 = __importDefault(require("../models/user.model"));
+const sendError_1 = require("./../utils/sendError");
 const signJwt_1 = require("./../utils/signJwt");
 const getAllUsers = (_req, res, _next) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield user_model_1.default.find();
@@ -22,7 +24,12 @@ const getAllUsers = (_req, res, _next) => __awaiter(void 0, void 0, void 0, func
 });
 exports.getAllUsers = getAllUsers;
 const me = (req, res, _next) => __awaiter(void 0, void 0, void 0, function* () {
-    return res.json({ user: req.user });
+    try {
+        return sendOnSuccess_1.sendOnSuccess({ res }, { user: req.user });
+    }
+    catch (error) {
+        return sendError_1.sendErrors(res, 500, [{ msg: "Something went wrong" }]);
+    }
 });
 exports.me = me;
 const register = (req, res, _next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -41,15 +48,10 @@ const register = (req, res, _next) => __awaiter(void 0, void 0, void 0, function
             httpOnly: true,
             maxAge: 10 * 60 * 1000,
         });
-        return res.json({ msg: "User created" }).end();
+        return sendOnSuccess_1.sendOnSuccess({ res, msg: "User Created" }, { accessToken });
     }
     catch (error) {
-        return res
-            .json({
-            errors: [{ msg: error.message || "Something went wrong" }],
-        })
-            .status(500)
-            .end();
+        return sendError_1.sendErrors(res, 500, [{ msg: "Something went wrong" }]);
     }
 });
 exports.register = register;
@@ -65,15 +67,10 @@ const login = ({ user }, res, _next) => __awaiter(void 0, void 0, void 0, functi
             httpOnly: true,
             maxAge: 10 * 60 * 1000,
         });
-        return res.json({ refreshToken, accessToken }).end();
+        return sendOnSuccess_1.sendOnSuccess({ res, msg: "Logged in succesefully" }, { accessToken });
     }
     catch (error) {
-        return res
-            .json({
-            errors: [{ msg: error.message || "Something went wrong" }],
-        })
-            .status(500)
-            .end();
+        return sendError_1.sendErrors(res, 500, [{ msg: "Something went wrong" }]);
     }
 });
 exports.login = login;
@@ -87,15 +84,10 @@ const logout = (_req, res, _next) => __awaiter(void 0, void 0, void 0, function*
             httpOnly: true,
             maxAge: -1,
         });
-        return res.json({ msg: "Logged out" }).end();
+        return sendOnSuccess_1.sendOnSuccess({ res, msg: "Logged out succesefully" });
     }
     catch (error) {
-        return res
-            .json({
-            errors: [{ msg: error.message || "Something went wrong" }],
-        })
-            .status(500)
-            .end();
+        return sendError_1.sendErrors(res, 500, [{ msg: "Something went wrong" }]);
     }
 });
 exports.logout = logout;

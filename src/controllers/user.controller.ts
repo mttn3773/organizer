@@ -1,8 +1,9 @@
+import { sendOnSuccess } from "./../utils/sendOnSuccess";
 import { hash } from "argon2";
 import { NextFunction, Request, Response } from "express";
 import User from "../models/user.model";
-import { IError } from "./../interfaces/error.interface";
 import { ICreateUser, IUser } from "./../interfaces/user.interfaces";
+import { sendErrors } from "./../utils/sendError";
 import { signAccessToken, signRefreshToken } from "./../utils/signJwt";
 export const getAllUsers = async (
   _req: Request,
@@ -14,7 +15,11 @@ export const getAllUsers = async (
 };
 
 export const me = async (req: Request, res: Response, _next: NextFunction) => {
-  return res.json({ user: req.user });
+  try {
+    return sendOnSuccess({ res }, { user: req.user });
+  } catch (error) {
+    return sendErrors(res, 500, [{ msg: "Something went wrong" }]);
+  }
 };
 
 export const register = async (
@@ -37,14 +42,9 @@ export const register = async (
       httpOnly: true,
       maxAge: 10 * 60 * 1000, // 10m
     });
-    return res.json({ msg: "User created" }).end();
+    return sendOnSuccess({ res, msg: "User Created" }, { accessToken });
   } catch (error) {
-    return res
-      .json({
-        errors: [{ msg: error.message || "Something went wrong" }] as IError[],
-      })
-      .status(500)
-      .end();
+    return sendErrors(res, 500, [{ msg: "Something went wrong" }]);
   }
 };
 
@@ -65,14 +65,12 @@ export const login = async (
       httpOnly: true,
       maxAge: 10 * 60 * 1000, // 10m
     });
-    return res.json({ refreshToken, accessToken }).end();
+    return sendOnSuccess(
+      { res, msg: "Logged in succesefully" },
+      { accessToken }
+    );
   } catch (error) {
-    return res
-      .json({
-        errors: [{ msg: error.message || "Something went wrong" }] as IError[],
-      })
-      .status(500)
-      .end();
+    return sendErrors(res, 500, [{ msg: "Something went wrong" }]);
   }
 };
 
@@ -98,13 +96,8 @@ export const logout = async (
         maxAge: -1,
       }
     );
-    return res.json({ msg: "Logged out" }).end();
+    return sendOnSuccess({ res, msg: "Logged out succesefully" });
   } catch (error) {
-    return res
-      .json({
-        errors: [{ msg: error.message || "Something went wrong" }] as IError[],
-      })
-      .status(500)
-      .end();
+    return sendErrors(res, 500, [{ msg: "Something went wrong" }]);
   }
 };

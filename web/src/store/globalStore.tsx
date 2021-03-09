@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useReducer } from "react";
+import { Redirect } from "react-router";
 import { config } from "../config/config";
 import { useHttp } from "../hooks/useHttp";
 import { IRootState } from "../interfaces/rootState.interface";
@@ -24,6 +25,7 @@ export const DataProvider: React.FC<globalStoreProps> = ({ children }) => {
       dispatch({ type: "SET_AUTH", payload: !!res.user });
     });
   }, []);
+
   return (
     <GlobalState.Provider value={{ state, dispatch }}>
       {children}

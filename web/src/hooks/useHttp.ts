@@ -1,4 +1,3 @@
-import { json } from "body-parser";
 import { GlobalState } from "./../store/globalStore";
 import { useContext, useEffect } from "react";
 interface IRequestProps {
@@ -26,7 +25,10 @@ export const useHttp = () => {
       dispatch({ type: "SET_LOADING", payload: true });
       const response: any = await fetch(url, { method, body, headers });
       const res = await response.json();
-      if (!response.ok || res.errors) {
+      if (!res.success) {
+        if (response.status === 401) {
+          dispatch({ type: "SET_AUTH", payload: false });
+        }
         if (toastErorrs)
           dispatch({
             type: "SET_ERRORS",

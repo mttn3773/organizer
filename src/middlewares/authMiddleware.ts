@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
-import { IError } from "src/interfaces/error.interface";
 import User from "../models/user.model";
 import { jwtConfig } from "./../config/config";
 import { ITokenPaylaod } from "./../interfaces/tokenPayload.interface";
+import { sendErrors } from "./../utils/sendError";
 import { signAccessToken } from "./../utils/signJwt";
 export const authMiddleware = async (
   req: Request,
@@ -19,10 +19,9 @@ export const authMiddleware = async (
         jwtConfig.accessTokenSecret!
       ) as ITokenPaylaod;
       if (!payload.user) {
-        return res
-          .status(401)
-          .json({ errors: [{ msg: "Please sign in or register" }] as IError[] })
-          .end();
+        return sendErrors(res, 401, [
+          { msg: "Please sign in or register", param: "authentication" },
+        ]);
       }
       req.user = payload.user;
       return next();
@@ -33,23 +32,20 @@ export const authMiddleware = async (
         jwtConfig.refreshTokenSecret!
       ) as ITokenPaylaod;
       if (!payload) {
-        return res
-          .status(401)
-          .json({ errors: [{ msg: "Please sign in or register" }] as IError[] })
-          .end();
+        return sendErrors(res, 401, [
+          { msg: "Please sign in or register", param: "authentication" },
+        ]);
       }
       const user = await User.findById(payload.user._id);
       if (!user) {
-        return res
-          .status(401)
-          .json({ errors: [{ msg: "Please sign in or register" }] as IError[] })
-          .end();
+        return sendErrors(res, 401, [
+          { msg: "Please sign in or register", param: "authentication" },
+        ]);
       }
       if (payload.user.count !== user.count) {
-        return res
-          .status(401)
-          .json({ errors: [{ msg: "Please sign in or register" }] as IError[] })
-          .end();
+        return sendErrors(res, 401, [
+          { msg: "Please sign in or register", param: "authentication" },
+        ]);
       }
       const newAccessToken = signAccessToken(user);
       res.cookie("accessToken", newAccessToken, {
@@ -59,16 +55,12 @@ export const authMiddleware = async (
       req.user = user as any;
       return next();
     }
-    return res
-      .status(401)
-      .json({ errors: [{ msg: "Please sign in or register" }] as IError[] })
-      .end();
+    return sendErrors(res, 401, [
+      { msg: "Please sign in or register", param: "authentication" },
+    ]);
   } catch (error) {
-    return res
-      .json({
-        errors: [{ msg: error.message || "Something went wrong" }] as IError[],
-      })
-      .status(500)
-      .end();
+    return sendErrors(res, 401, [
+      { msg: "Please sign in or register", param: "authentication" },
+    ]);
   }
 };

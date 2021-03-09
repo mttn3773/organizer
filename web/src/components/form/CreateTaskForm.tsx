@@ -1,35 +1,29 @@
 import { Button, CircularProgress, Flex } from "@chakra-ui/react";
-import axios from "axios";
 import { Form, Formik } from "formik";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Redirect } from "react-router-dom";
 import { useHttp } from "../../hooks/useHttp";
 import { GlobalState } from "../../store/globalStore";
 import { toErrorMap } from "../../utils/toErrorsMap";
 import { InputField } from "./InputField";
-interface UserFormProps {
-  url: string;
-}
+import { config } from "../../config/config";
+interface CreateTaskFormProps {}
 
-export const UserForm: React.FC<UserFormProps> = ({ url }) => {
+export const CreateTaskForm: React.FC<CreateTaskFormProps> = ({}) => {
+  const { dispatch, state } = useContext(GlobalState);
   const { request } = useHttp();
-  const { dispatch } = useContext(GlobalState);
-
   return (
     <Formik
       initialValues={{ email: "", password: "" }}
       onSubmit={async (values, { setErrors }) => {
         try {
           const res = await request({
-            url,
+            url: config.server.endpoints.tasks,
             method: "POST",
             body: values,
             toastErorrs: false,
           });
-          if (res.accessToken) {
-            dispatch({ type: "SET_AUTH", payload: true });
-            return <Redirect to="/" />;
-          }
+
           const mappedErrors = toErrorMap(res.errors);
           if (mappedErrors) setErrors(mappedErrors);
         } catch (errors) {
@@ -47,8 +41,9 @@ export const UserForm: React.FC<UserFormProps> = ({ url }) => {
             alignItems="center"
             width="60%"
           >
-            <InputField type="email" name="email" />
-            <InputField type="password" name="password" />
+            <InputField type="text" name="title" />
+            <InputField type="text" name="description" />
+            <InputField type="time" name="password" />
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? (
                 <CircularProgress

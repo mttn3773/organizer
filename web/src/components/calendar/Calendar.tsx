@@ -1,8 +1,9 @@
-import { Box, Flex, Grid, Text } from "@chakra-ui/react";
+import { Box, Flex, Grid, Text, useMediaQuery } from "@chakra-ui/react";
 import moment from "moment";
 import React from "react";
 import { ITask } from "../../interfaces/tasks.interface";
 import { Day } from "./Day";
+
 const DAYS_OF_WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 interface CalendarProps {
@@ -42,16 +43,17 @@ export const Calendar: React.FC<CalendarProps> = ({
     <Grid
       templateColumns="repeat(7, 1fr)"
       margin="auto"
-      w="75%"
+      w={{ sm: "85%", base: "100%" }}
       rowGap="2rem"
-      columnGap="2rem"
+      columnGap={{ sm: "2rem", base: "1rem" }}
       mt="3rem"
+      justifyItems="center"
     >
       {DAYS_OF_WEEK.map((day, index) => {
         return (
           <Flex
-            h="4rem"
-            w="75%"
+            h={{ sm: "4rem", base: "3rem" }}
+            w={{ sm: "75%", base: "100%" }}
             alignItems="center"
             justifyContent="space-around"
             key={index}

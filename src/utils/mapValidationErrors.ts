@@ -1,3 +1,4 @@
+import { sendErrors } from "./sendError";
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 
@@ -9,8 +10,7 @@ export const mapValidationErrors = (
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    res.status(500).send({ errors: errors.array() }).end();
-    return;
+    return sendErrors(res, 500, errors.array());
   }
   next();
 };

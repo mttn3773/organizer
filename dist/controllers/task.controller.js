@@ -14,9 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createTask = exports.getUserTasks = void 0;
 const tasks_model_1 = __importDefault(require("../models/tasks.model"));
+const sendError_1 = require("./../utils/sendError");
+const sendOnSuccess_1 = require("./../utils/sendOnSuccess");
 const getUserTasks = (req, res, _next) => __awaiter(void 0, void 0, void 0, function* () {
     const tasks = yield tasks_model_1.default.find({ owner: req.user._id }).sort({ date: "asc" });
-    return res.json({ tasks }).end();
+    return sendOnSuccess_1.sendOnSuccess({ res }, { tasks });
 });
 exports.getUserTasks = getUserTasks;
 const createTask = (req, res, _next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -29,15 +31,10 @@ const createTask = (req, res, _next) => __awaiter(void 0, void 0, void 0, functi
             description,
         });
         yield task.save();
-        return res.json({ msg: "Task created", task }).end();
+        return sendOnSuccess_1.sendOnSuccess({ res, msg: "Task created" }, { task });
     }
     catch (error) {
-        return res
-            .json({
-            errors: [{ msg: error.message || "Something went wrong" }],
-        })
-            .status(500)
-            .end();
+        return sendError_1.sendErrors(res, 500, [{ msg: "Something went wrong" }]);
     }
 });
 exports.createTask = createTask;

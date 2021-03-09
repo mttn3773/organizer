@@ -6,7 +6,7 @@ const TaskSchema = new Schema(
     owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
     date: { type: Date, required: true },
     title: { type: String, required: true },
-    description: { type: String, default: "No description" },
+    description: { type: String },
   },
   { timestamps: true }
 );

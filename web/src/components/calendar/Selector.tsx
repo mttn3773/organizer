@@ -18,11 +18,11 @@ export const Selector: React.FC<SelectorProps> = ({
   };
   return (
     <Flex
+      gridArea="selector"
       margin="auto"
-      w="30%"
-      justifyContent="space-between"
+      w="40%"
+      justifyContent="space-around"
       alignItems="center"
-      gridGap="2rem"
     >
       <Button onClick={() => changeMonth(-1)}>
         <AiOutlineArrowLeft />
