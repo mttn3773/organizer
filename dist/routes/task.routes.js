@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const isOwnerMiddleware_1 = require("./../middlewares/isOwnerMiddleware");
 const express_1 = require("express");
 const express_validator_1 = require("express-validator");
 const task_controller_1 = require("./../controllers/task.controller");
@@ -12,5 +13,6 @@ router.post("", authMiddleware_1.authMiddleware, [
     express_validator_1.check("title").isLength({ max: 54, min: 1 }),
     express_validator_1.check("description").isLength({ max: 500 }),
 ], mapValidationErrors_1.mapValidationErrors, task_controller_1.createTask);
+router.delete("/:id", authMiddleware_1.authMiddleware, isOwnerMiddleware_1.isOwnerMiddleware, task_controller_1.deleteTask);
 exports.default = router;
 //# sourceMappingURL=task.routes.js.map

@@ -1,4 +1,3 @@
-import { IUser } from "./../../../src/interfaces/user.interfaces";
 import { IError } from "./../interfaces/errors.interface";
 
 export interface IActionState {

@@ -9,7 +9,7 @@ export const getUserTasks = async (
   res: Response,
   _next: NextFunction
 ) => {
-  const tasks = await Task.find({ owner: req.user._id }).sort({ date: "asc" });
+  const tasks = await Task.find({ owner: req.user!._id }).sort({ date: "asc" });
   return sendOnSuccess({ res }, { tasks });
 };
 export const createTask = async (
@@ -19,6 +19,8 @@ export const createTask = async (
 ) => {
   try {
     const { date, title, description } = req.body;
+    console.log(new Date(date).toLocaleString());
+
     const task = new Task({
       owner: req.user,
       date,
@@ -27,6 +29,21 @@ export const createTask = async (
     } as ICreateTask);
     await task.save();
     return sendOnSuccess({ res, msg: "Task created" }, { task });
+  } catch (error) {
+    return sendErrors(res, 500, [{ msg: "Something went wrong" }]);
+  }
+};
+
+export const deleteTask = async (
+  req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
+  try {
+    const task = req.task;
+    if (!task) return sendErrors(res, 500, [{ msg: "Something went wrong" }]);
+    await task.deleteOne();
+    return sendOnSuccess({ res, msg: "Task deleted" }, { task });
   } catch (error) {
     return sendErrors(res, 500, [{ msg: "Something went wrong" }]);
   }

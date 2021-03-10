@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Calendar } from "../components/calendar/Calendar";
 import { DayDetails } from "../components/calendar/DayDetails";
 import { Selector } from "../components/calendar/Selector";
+import { CustomAlertDialog } from "../components/notify/AlertDialog";
 import { config } from "../config/config";
 import { useHttp } from "../hooks/useHttp";
 import { ITask } from "../interfaces/tasks.interface";
@@ -13,8 +14,7 @@ interface ProfileProps {}
 export const ProfilePage: React.FC<ProfileProps> = ({}) => {
   const [date, setDate] = useState<moment.Moment>(moment());
   const [selected, setSelected] = useState<moment.Moment>(moment());
-  const [tasks, setTasks] = useState<ITask[]>();
-  const [isMobile] = useMediaQuery("(max-width:1000px)");
+  const [tasks, setTasks] = useState<ITask[]>([]);
   const { request } = useHttp();
   const handleLogout = () => {
     request({ url: config.server.endpoints.logout, method: "POST" }).then(
@@ -54,7 +54,7 @@ export const ProfilePage: React.FC<ProfileProps> = ({}) => {
           date={date}
           setSelected={setSelected}
           selected={selected}
-          tasks={tasks ? tasks : []}
+          tasks={tasks}
         />
       </Box>
       <Box
@@ -64,6 +64,7 @@ export const ProfilePage: React.FC<ProfileProps> = ({}) => {
         gridArea="details"
       >
         <DayDetails
+          setTasks={setTasks}
           date={selected}
           tasks={
             tasks

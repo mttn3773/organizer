@@ -54,8 +54,8 @@ export const login = async (
   _next: NextFunction
 ) => {
   try {
-    const refreshToken = signRefreshToken(user);
-    const accessToken = signAccessToken(user);
+    const refreshToken = signRefreshToken(user!);
+    const accessToken = signAccessToken(user!);
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,

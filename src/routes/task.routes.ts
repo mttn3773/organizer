@@ -1,6 +1,11 @@
+import { isOwnerMiddleware } from "./../middlewares/isOwnerMiddleware";
 import { Router } from "express";
 import { check } from "express-validator";
-import { createTask, getUserTasks } from "./../controllers/task.controller";
+import {
+  createTask,
+  deleteTask,
+  getUserTasks,
+} from "./../controllers/task.controller";
 import { authMiddleware } from "./../middlewares/authMiddleware";
 import { mapValidationErrors } from "./../utils/mapValidationErrors";
 
@@ -20,4 +25,5 @@ router.post(
   createTask
 );
 
+router.delete("/:id", authMiddleware, isOwnerMiddleware, deleteTask);
 export default router;

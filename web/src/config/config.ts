@@ -4,6 +4,7 @@ const ENDPOINTS = {
   logout: "/api/user/logout",
   me: "/api/user/me",
   tasks: "api/task",
+  deleteTask: (id: string) => `api/task/${id}`,
 };
 
 export const config = {

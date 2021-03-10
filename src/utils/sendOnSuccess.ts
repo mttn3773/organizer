@@ -9,5 +9,5 @@ export const sendOnSuccess = (
   { res, msg }: ISendOnSuccessOptions,
   props?: Object
 ) => {
-  return res.json({ success: true, ...props }).end();
+  return res.json({ success: true, msg, ...props }).end();
 };

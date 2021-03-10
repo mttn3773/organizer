@@ -1,6 +1,6 @@
-import { Box, Button, Flex, Text, Circle } from "@chakra-ui/react";
-import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai";
+import { Button, Flex, Text } from "@chakra-ui/react";
 import React from "react";
+import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 
 interface SelectorProps {
   date: moment.Moment;

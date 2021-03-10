@@ -1,7 +1,6 @@
 import { Button, CircularProgress, Flex } from "@chakra-ui/react";
-import axios from "axios";
 import { Form, Formik } from "formik";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Redirect } from "react-router-dom";
 import { useHttp } from "../../hooks/useHttp";
 import { GlobalState } from "../../store/globalStore";
@@ -31,7 +30,7 @@ export const UserForm: React.FC<UserFormProps> = ({ url }) => {
             return <Redirect to="/" />;
           }
           const mappedErrors = toErrorMap(res.errors);
-          if (mappedErrors) setErrors(mappedErrors);
+          if (mappedErrors) return setErrors(mappedErrors);
         } catch (errors) {
           return setErrors(toErrorMap(errors));
         }

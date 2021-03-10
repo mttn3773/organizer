@@ -1,6 +1,5 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-import { useHttp } from "../hooks/useHttp";
 import { GlobalState } from "../store/globalStore";
 import { LoginPage } from "./Login";
 import { ProfilePage } from "./Profile";
