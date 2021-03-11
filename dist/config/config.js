@@ -11,6 +11,7 @@ exports.mongoConfig = {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true,
+        useFindAndModify: true,
     },
 };
 exports.jwtConfig = {

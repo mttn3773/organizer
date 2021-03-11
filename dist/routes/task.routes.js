@@ -14,5 +14,10 @@ router.post("", authMiddleware_1.authMiddleware, [
     express_validator_1.check("description").isLength({ max: 500 }),
 ], mapValidationErrors_1.mapValidationErrors, task_controller_1.createTask);
 router.delete("/:id", authMiddleware_1.authMiddleware, isOwnerMiddleware_1.isOwnerMiddleware, task_controller_1.deleteTask);
+router.put("/:id", authMiddleware_1.authMiddleware, isOwnerMiddleware_1.isOwnerMiddleware, [
+    express_validator_1.check("date").trim().isISO8601(),
+    express_validator_1.check("title").isLength({ max: 54, min: 1 }),
+    express_validator_1.check("description").isLength({ max: 500 }),
+], mapValidationErrors_1.mapValidationErrors, task_controller_1.updateTask);
 exports.default = router;
 //# sourceMappingURL=task.routes.js.map

@@ -1,4 +1,5 @@
 import { config } from "dotenv";
+import { ConnectOptions } from "mongoose";
 
 config({ path: "./.env" });
 
@@ -11,7 +12,8 @@ export const mongoConfig = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
-  },
+    useFindAndModify: true,
+  } as ConnectOptions,
 };
 
 export const jwtConfig = {

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { ICreateTask } from "../interfaces/tasks.interface";
+import { ICreateTask, ITask } from "../interfaces/tasks.interface";
 import Task from "../models/tasks.model";
 import { sendErrors } from "./../utils/sendError";
 import { sendOnSuccess } from "./../utils/sendOnSuccess";
@@ -44,6 +44,27 @@ export const deleteTask = async (
     if (!task) return sendErrors(res, 500, [{ msg: "Something went wrong" }]);
     await task.deleteOne();
     return sendOnSuccess({ res, msg: "Task deleted" }, { task });
+  } catch (error) {
+    return sendErrors(res, 500, [{ msg: "Something went wrong" }]);
+  }
+};
+
+export const updateTask = async (
+  req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
+  try {
+    const task = req.task as ITask;
+    if (!task) return sendErrors(res, 500, [{ msg: "Something went wrong" }]);
+    const { date, title, description } = req.body;
+
+    const newTask = await Task.findOneAndUpdate(
+      { _id: task._id },
+      { title, date, description },
+      { new: true }
+    );
+    return sendOnSuccess({ res, msg: "Task updated" }, { task: newTask });
   } catch (error) {
     return sendErrors(res, 500, [{ msg: "Something went wrong" }]);
   }

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTask = exports.createTask = exports.getUserTasks = void 0;
+exports.updateTask = exports.deleteTask = exports.createTask = exports.getUserTasks = void 0;
 const tasks_model_1 = __importDefault(require("../models/tasks.model"));
 const sendError_1 = require("./../utils/sendError");
 const sendOnSuccess_1 = require("./../utils/sendOnSuccess");
@@ -52,4 +52,18 @@ const deleteTask = (req, res, _next) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.deleteTask = deleteTask;
+const updateTask = (req, res, _next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const task = req.task;
+        if (!task)
+            return sendError_1.sendErrors(res, 500, [{ msg: "Something went wrong" }]);
+        const { date, title, description } = req.body;
+        const newTask = yield tasks_model_1.default.findOneAndUpdate({ _id: task._id }, { title, date, description }, { new: true });
+        return sendOnSuccess_1.sendOnSuccess({ res, msg: "Task updated" }, { task: newTask });
+    }
+    catch (error) {
+        return sendError_1.sendErrors(res, 500, [{ msg: "Something went wrong" }]);
+    }
+});
+exports.updateTask = updateTask;
 //# sourceMappingURL=task.controller.js.map
