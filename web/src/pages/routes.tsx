@@ -7,7 +7,7 @@ import { RegisterPage } from "./register";
 interface routesProps {}
 
 export const Routes: React.FC<routesProps> = ({}) => {
-  const { state, dispatch } = useContext(GlobalState);
+  const { state } = useContext(GlobalState);
   const { auth } = state;
 
   const isUndefined = typeof auth === "undefined";

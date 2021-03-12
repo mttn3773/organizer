@@ -16,7 +16,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   withLabel = true,
   ...props
 }) => {
-  const [field, { error }] = useField(props as any);
+  const [field] = useField(props as any);
   return (
     <FormControl id={field.name}>
       {withLabel && <FormLabel>{toCapitalize(field.name)}</FormLabel>}

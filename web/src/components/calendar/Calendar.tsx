@@ -41,6 +41,7 @@ export const Calendar: React.FC<CalendarProps> = ({
   };
   return (
     <Grid
+      gridArea="calendar"
       templateColumns="repeat(7, 1fr)"
       margin="auto"
       w={{ sm: "85%", base: "100%" }}

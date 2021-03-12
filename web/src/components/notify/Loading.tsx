@@ -9,7 +9,7 @@ import React from "react";
 
 interface LoadingProps {}
 
-export const Loading: React.FC<LoadingProps> = ({}) => {
+export const Loading: React.FC<LoadingProps> = () => {
   return (
     <Modal isOpen={true} onClose={() => {}}>
       <ModalOverlay />

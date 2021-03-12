@@ -1,11 +1,11 @@
 import { useToast } from "@chakra-ui/react";
-import React, { useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import { GlobalState } from "../../store/globalStore";
 import { Loading } from "./Loading";
 
 interface NotifyProps {}
 
-export const Notify: React.FC<NotifyProps> = ({}) => {
+export const Notify: React.FC<NotifyProps> = () => {
   const { state, dispatch } = useContext(GlobalState);
   const { errors, loading } = state;
   const toast = useToast();
@@ -13,7 +13,7 @@ export const Notify: React.FC<NotifyProps> = ({}) => {
     if (!errors || !errors.length) return;
     if (errors.length)
       errors.map((error) => {
-        toast({
+        return toast({
           title: "Error",
           description: error.msg || "Something went wrong",
           status: "error",
