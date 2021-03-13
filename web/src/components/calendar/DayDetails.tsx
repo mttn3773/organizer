@@ -48,6 +48,9 @@ export const DayDetails: React.FC<DayDetailsProps> = ({
       overflowY="scroll"
     >
       <Flex direction="column" justifyContent="center" alignItems="center">
+        <Text fontWeight="600" fontSize="lg">
+          {date.format("DD-MM-YYYY")}
+        </Text>
         <CustomAlertDialog
           isOpen={alertDialogOpen}
           setIsOpen={setAlertDialogOpen}
