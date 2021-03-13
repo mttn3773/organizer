@@ -1,0 +1,1 @@
+{"version":3,"file":"sendOnSuccess.js","sourceRoot":"","sources":["../../src/utils/sendOnSuccess.ts"],"names":[],"mappings":";;;AAOO,MAAM,aAAa,GAAG,CAC3B,EAAE,GAAG,EAAE,GAAG,EAAyB,EACnC,KAAc,EACd,EAAE;IACF,OAAO,GAAG,CAAC,IAAI,iBAAG,OAAO,EAAE,IAAI,EAAE,GAAG,IAAK,KAAK,EAAG,CAAC,GAAG,EAAE,CAAC;AAC1D,CAAC,CAAC;AALW,QAAA,aAAa,iBAKxB"}
