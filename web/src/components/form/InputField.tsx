@@ -1,6 +1,12 @@
 import React, { InputHTMLAttributes } from "react";
 import { ErrorMessage, useField } from "formik";
-import { FormControl, FormLabel, Input, Textarea } from "@chakra-ui/react";
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Textarea,
+  Text,
+} from "@chakra-ui/react";
 import { toCapitalize } from "../../utils/toCapitalize";
 type InputFieldProps = InputHTMLAttributes<
   HTMLInputElement | HTMLTextAreaElement
@@ -20,7 +26,13 @@ export const InputField: React.FC<InputFieldProps> = ({
   return (
     <FormControl id={field.name}>
       {withLabel && <FormLabel>{toCapitalize(field.name)}</FormLabel>}
-      <ErrorMessage name={field.name} component="div" className="error-text" />
+      <ErrorMessage name={field.name} className="error-text">
+        {(msg) => (
+          <Text textAlign="center" fontWeight="600" color="red.500">
+            {msg}
+          </Text>
+        )}
+      </ErrorMessage>
       {!isTextArea ? (
         <Input
           bgColor="whiteAlpha.500"

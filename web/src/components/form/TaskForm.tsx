@@ -35,7 +35,7 @@ export const TaskForm: React.FC<CreateTaskFormProps> = ({
     : "";
   const handleSubmit = async (
     values: ICreateTask,
-    { setErrors, resetForm }: FormikHelpers<ICreateTask>
+    { setErrors }: FormikHelpers<ICreateTask>
   ) => {
     try {
       if (!values.date) {

@@ -39,11 +39,12 @@ export const DayDetails: React.FC<DayDetailsProps> = ({
   };
   return (
     <Box
-      pl="1rem"
+      pb="2rem"
       borderLeft="1px solid"
       borderColor="gray.200"
+      bgColor="gray.100"
       gridArea="details"
-      height="90vh"
+      height={{ base: "auto", md: "90vh" }}
       overflowY="scroll"
     >
       <Flex direction="column" justifyContent="center" alignItems="center">

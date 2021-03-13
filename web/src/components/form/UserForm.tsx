@@ -36,7 +36,7 @@ export const UserForm: React.FC<UserFormProps> = ({ url }) => {
         }
       }}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, errors }) => (
         <Form>
           <Flex
             m="0 auto"
@@ -44,7 +44,13 @@ export const UserForm: React.FC<UserFormProps> = ({ url }) => {
             direction="column"
             gridGap="2rem"
             alignItems="center"
-            width="60%"
+            width="75%"
+            border="2px solid"
+            p="4rem"
+            borderRadius="6%"
+            borderColor={
+              errors.email || errors.password ? "red.400" : "green.400"
+            }
           >
             <InputField type="email" name="email" />
             <InputField type="password" name="password" />

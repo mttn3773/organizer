@@ -1,7 +1,6 @@
 import { Grid } from "@chakra-ui/react";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { FadeAnimation } from "../components/animation/FadeAnimation";
 import { Calendar } from "../components/calendar/Calendar";
 import { DayDetails } from "../components/calendar/DayDetails";
 import { Selector } from "../components/calendar/Selector";
@@ -16,13 +15,7 @@ export const ProfilePage: React.FC<ProfileProps> = () => {
   const [selected, setSelected] = useState<moment.Moment>(moment());
   const [tasks, setTasks] = useState<ITask[]>([]);
   const { request } = useHttp();
-  // const handleLogout = () => {
-  //   request({ url: config.server.endpoints.logout, method: "POST" }).then(
-  //     () => {
-  //       window.location.reload();
-  //     }
-  //   );
-  // };
+
   useEffect(() => {
     request({
       url: config.server.endpoints.tasks,
@@ -31,11 +24,13 @@ export const ProfilePage: React.FC<ProfileProps> = () => {
   return (
     <Grid
       gridAutoColumns="2fr 1fr 1fr"
+      gridTemplateRows="auto"
       templateAreas={{
-        sm: `
+        md: `
         "selector selector selector" 
         "calendar calendar details"
         `,
+
         base: `
           "selector selector selector"
           "calendar calendar calendar"

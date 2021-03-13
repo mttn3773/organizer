@@ -35,10 +35,12 @@ export const Selector: React.FC<SelectorProps> = ({
         fontWeight="600"
         justifyContent="center"
         alignItems="center"
+        position={{ sm: "relative", base: "absolute" }}
+        right={{ sm: "", base: "10px" }}
       >
         {numberOfTasks}
       </Flex>
-      <Text>{date.format("MMM YYYY")}</Text>
+      <Text textAlign="center">{date.format("MMM YYYY")}</Text>
       <Button onClick={() => changeMonth(1)}>
         <AiOutlineArrowRight />
       </Button>

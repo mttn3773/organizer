@@ -44,11 +44,12 @@ export const Calendar: React.FC<CalendarProps> = ({
       gridArea="calendar"
       templateColumns="repeat(7, 1fr)"
       margin="auto"
-      w={{ sm: "85%", base: "100%" }}
+      w={{ md: "85%", base: "100%" }}
       rowGap="2rem"
-      columnGap={{ sm: "2rem", base: "1rem" }}
+      columnGap={{ lg: "1.5rem", base: "0.7rem" }}
       mt="3rem"
       justifyItems="center"
+      mb="2rem"
     >
       {DAYS_OF_WEEK.map((day, index) => {
         return (
