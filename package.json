@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "watch": "tsc -w",
-    "dev": "nodemon --exec ts-node dist/index.js"
+    "dev": "nodemon --exec ts-node dist/index.js",
+    "heroku-postbuild": "npm run build --prefix client"
   },
   "dependencies": {
     "argon2": "^0.27.1",
