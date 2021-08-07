@@ -37,7 +37,9 @@ const register = (req, res, _next) => __awaiter(void 0, void 0, void 0, function
         const { email, password } = req.body;
         const hashedPassword = yield argon2_1.hash(password);
         const user = new user_model_1.default({ email, password: hashedPassword });
-        yield user.save();
+        yield user.save((err) => {
+            console.log(err);
+        });
         const refreshToken = signJwt_1.signRefreshToken(user);
         const accessToken = signJwt_1.signAccessToken(user);
         res.cookie("refreshToken", refreshToken, {

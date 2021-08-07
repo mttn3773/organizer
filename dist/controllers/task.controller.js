@@ -24,14 +24,13 @@ exports.getUserTasks = getUserTasks;
 const createTask = (req, res, _next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { date, title, description } = req.body;
-        console.log(new Date(date).toLocaleString());
         const task = new tasks_model_1.default({
             owner: req.user,
             date,
             title,
             description,
         });
-        yield task.save();
+        yield task.save((err) => console.log(err));
         return sendOnSuccess_1.sendOnSuccess({ res, msg: "Task created" }, { task });
     }
     catch (error) {

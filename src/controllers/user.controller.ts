@@ -31,7 +31,9 @@ export const register = async (
     const { email, password } = req.body as ICreateUser;
     const hashedPassword = await hash(password);
     const user = new User({ email, password: hashedPassword } as IUser);
-    await user.save();
+    await user.save((err) => {
+      console.log(err);
+    });
     const refreshToken = signRefreshToken(user);
     const accessToken = signAccessToken(user);
     res.cookie("refreshToken", refreshToken, {

@@ -19,15 +19,13 @@ export const createTask = async (
 ) => {
   try {
     const { date, title, description } = req.body;
-    console.log(new Date(date).toLocaleString());
-
     const task = new Task({
       owner: req.user,
       date,
       title,
       description,
     } as ICreateTask);
-    await task.save();
+    await task.save((err) => console.log(err));
     return sendOnSuccess({ res, msg: "Task created" }, { task });
   } catch (error) {
     return sendErrors(res, 500, [{ msg: "Something went wrong" }]);

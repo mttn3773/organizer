@@ -1,12 +1,12 @@
-import { authMiddleware } from "./../middlewares/authMiddleware";
-import { isValidPassword } from "./../utils/isValidPasswordValidator";
-import { doesUserWithEmailExists } from "./../utils/doesUserWithEmailExistsValidator";
-import { mapValidationErrors } from "./../utils/mapValidationErrors";
-import { isUniqueEmail } from "./../utils/isUniqueEmailValidator";
-import { login, logout, me, register } from "./../controllers/user.controller";
 import { Router } from "express";
-import { getAllUsers } from "../controllers/user.controller";
 import { check } from "express-validator";
+import { getAllUsers } from "../controllers/user.controller";
+import { login, logout, me, register } from "./../controllers/user.controller";
+import { authMiddleware } from "./../middlewares/authMiddleware";
+import { doesUserWithEmailExists } from "./../utils/doesUserWithEmailExistsValidator";
+import { isUniqueEmail } from "./../utils/isUniqueEmailValidator";
+import { isValidPassword } from "./../utils/isValidPasswordValidator";
+import { mapValidationErrors } from "./../utils/mapValidationErrors";
 const router = Router();
 
 router.get("", authMiddleware, getAllUsers);
@@ -20,7 +20,6 @@ router.post(
   mapValidationErrors,
   register
 );
-
 router.post(
   "/login",
   [
